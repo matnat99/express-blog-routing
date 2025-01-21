@@ -1,14 +1,28 @@
-const express = require("express")
-const router = express.Router()
+const express = require("express");
+const posts = require("../data/postsData");
+const router = express.Router();
 
 // Index
 router.get('/', function (req, res) {
-    res.send('Lista dei post');
+    res.json(posts);
     })
   
 // Show
 router.get('/:id', function (req, res) {
-  res.send('Dettagli del post ' + req.params.id);
+
+    // Guard Condition
+    if(isNaN(req.params.id)){
+        return res.sendStatus(400)
+    }
+
+    const post = posts.find((postElm) => postElm.id == req.params.id)
+
+    // Guard Condition
+    if(!post){
+        return res.sendStatus(404)
+    }
+
+    res.json(post);
 })
 
 // Store
